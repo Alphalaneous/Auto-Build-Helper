@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelEditorLayer.hpp>
+#include <Geode/modify/EditorPauseLayer.hpp>
 
 using namespace geode::prelude;
 
@@ -31,23 +32,25 @@ class $modify(MyEditorUI, EditorUI) {
 			}
 		});
 
-		if (CCMenu* menu = typeinfo_cast<CCMenu*>(getChildByID("toolbar-toggles-menu"))) {
+		if (!Mod::get()->getSettingValue<bool>("show-on-pause")) {
+			if (CCMenu* menu = typeinfo_cast<CCMenu*>(getChildByID("toolbar-toggles-menu"))) {
 
-			CCSprite* autoBuildHelperSpr = CCSprite::create("build_helper.png"_spr);
-			
-			ButtonSprite* autoBuildHelperSprOn = ButtonSprite::create(autoBuildHelperSpr, 40, true, 40, "GJ_button_02.png", 1);
-			ButtonSprite* autoBuildHelperSprOff = ButtonSprite::create(autoBuildHelperSpr, 40, true, 40, "GJ_button_01.png", 1);
+				CCSprite* autoBuildHelperSpr = CCSprite::create("build_helper.png"_spr);
+				
+				ButtonSprite* autoBuildHelperSprOn = ButtonSprite::create(autoBuildHelperSpr, 40, true, 40, "GJ_button_02.png", 1);
+				ButtonSprite* autoBuildHelperSprOff = ButtonSprite::create(autoBuildHelperSpr, 40, true, 40, "GJ_button_01.png", 1);
 
-			autoBuildHelperSpr->setPositionY(autoBuildHelperSpr->getPositionY()-2);
+				autoBuildHelperSpr->setPositionY(autoBuildHelperSpr->getPositionY()-2);
 
-			autoBuildHelperSprOn->setContentSize({40, 40});
-			autoBuildHelperSprOff->setContentSize({40, 40});
+				autoBuildHelperSprOn->setContentSize({40, 40});
+				autoBuildHelperSprOff->setContentSize({40, 40});
 
-			CCMenuItemToggler* toggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, this, menu_selector(MyEditorUI::onToggleAutoBuildHelper));
-			toggler->setID("build-helper-button"_spr);
-			toggler->toggle(true);
-			menu->addChild(toggler);
-			menu->updateLayout();
+				CCMenuItemToggler* toggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, this, menu_selector(MyEditorUI::onToggleAutoBuildHelper));
+				toggler->setID("build-helper-button"_spr);
+				toggler->toggle(true);
+				menu->addChild(toggler);
+				menu->updateLayout();
+			}
 		}
 
 		return true;
@@ -56,9 +59,39 @@ class $modify(MyEditorUI, EditorUI) {
 	void onToggleAutoBuildHelper(CCObject* sender) {
 		CCMenuItemToggler* toggler = static_cast<CCMenuItemToggler*>(sender);
 		m_fields->m_autoBuildHelperEnabled = toggler->isOn();
-		 //editor sounds compat
-		sender->setTag(m_selectedMode);
-        EditorUI::toggleMode(sender);
+		// editor sounds compat
+		if (!Mod::get()->getSettingValue<bool>("show-on-pause")) {
+			sender->setTag(m_selectedMode);
+			EditorUI::toggleMode(sender);
+		}
+	}
+};
+
+class $modify(MyEditorPauseLayer, EditorPauseLayer) {
+
+    bool init(LevelEditorLayer* p0) {
+		if (!EditorPauseLayer::init(p0)) return false;
+
+		if (Mod::get()->getSettingValue<bool>("show-on-pause")) {
+			if (CCMenu* menu = typeinfo_cast<CCMenu*>(getChildByID("guidelines-menu"))) {
+
+				CCSprite* autoBuildHelperSpr = CCSprite::create("build_helper.png"_spr);
+				
+				CircleButtonSprite* autoBuildHelperSprOn = CircleButtonSprite::create(autoBuildHelperSpr, CircleBaseColor::Cyan, CircleBaseSize::Small);
+				CircleButtonSprite* autoBuildHelperSprOff = CircleButtonSprite::create(autoBuildHelperSpr, CircleBaseColor::Gray, CircleBaseSize::Small);
+
+				autoBuildHelperSprOn->setContentSize({40, 40});
+				autoBuildHelperSprOff->setContentSize({40, 40});
+
+				CCMenuItemToggler* toggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, EditorUI::get(), menu_selector(MyEditorUI::onToggleAutoBuildHelper));
+				toggler->setID("build-helper-button"_spr);
+				toggler->toggle(true);
+				menu->addChild(toggler);
+				menu->updateLayout();
+			}
+		}
+
+		return true;
 	}
 };
 

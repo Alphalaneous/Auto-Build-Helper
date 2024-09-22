@@ -6,7 +6,7 @@
 	},
 	"id": "alphalaneous.auto_build_helper",
 	"name": "Auto Build Helper",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "Alphalaneous",
 	"description": "Automatically run build helper on paste",
 	"links": {
@@ -25,5 +25,13 @@
             "version": ">=v1.13.2",
             "importance": "required"
         }
-    ]
+    ],
+	"settings": {
+		"show-on-pause": {
+			"name": "Show on Editor Pause",
+			"description": "Shows the auto build helper toggle on editor pause rather than in the editor.",
+			"type": "bool",
+			"default": false
+		}
+	}
 }
