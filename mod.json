@@ -1,0 +1,29 @@
+{
+	"geode": "3.4.0",
+	"gd": {
+		"win": "2.206",
+		"android": "2.206"
+	},
+	"id": "alphalaneous.auto_build_helper",
+	"name": "Auto Build Helper",
+	"version": "v1.0.0",
+	"developer": "Alphalaneous",
+	"description": "Automatically run build helper on paste",
+	"links": {
+        "homepage": "https://twitter.com/alphalaneous",
+        "source": "https://github.com/Alphalaneous/Auto-Build-Helper",
+        "community": "https://discord.gg/Txn2CA5dHF"
+    },
+	"resources": {
+		"sprites": [
+			"resources/*.png"
+		]
+	},
+	"dependencies": [
+        {
+            "id": "geode.node-ids",
+            "version": ">=v1.13.2",
+            "importance": "required"
+        }
+    ]
+}
