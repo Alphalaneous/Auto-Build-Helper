@@ -10,6 +10,7 @@ class $modify(MyEditorUI, EditorUI) {
 	struct Fields {
 		Ref<EditorPauseLayer> m_pauseLayer;
 		bool m_autoBuildHelperEnabled = false;
+		CCMenuItemToggler* m_bhToggler;
 	};
 
 	bool init(LevelEditorLayer* editorLayer) {
@@ -45,10 +46,10 @@ class $modify(MyEditorUI, EditorUI) {
 				autoBuildHelperSprOn->setContentSize({40, 40});
 				autoBuildHelperSprOff->setContentSize({40, 40});
 
-				CCMenuItemToggler* toggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, this, menu_selector(MyEditorUI::onToggleAutoBuildHelper));
-				toggler->setID("build-helper-button"_spr);
-				toggler->toggle(true);
-				menu->addChild(toggler);
+				m_fields->m_bhToggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, this, menu_selector(MyEditorUI::onToggleAutoBuildHelper));
+				m_fields->m_bhToggler->setID("build-helper-button"_spr);
+				m_fields->m_bhToggler->toggle(true);
+				menu->addChild(m_fields->m_bhToggler);
 				menu->updateLayout();
 			}
 		}
@@ -65,9 +66,20 @@ class $modify(MyEditorUI, EditorUI) {
 			EditorUI::toggleMode(sender);
 		}
 	}
+
+	void showUI(bool show) {
+		EditorUI::showUI(show);
+		if(m_fields->m_bhToggler) {
+			m_fields->m_bhToggler->setVisible(show);
+		}
+	}
 };
 
 class $modify(MyEditorPauseLayer, EditorPauseLayer) {
+
+	struct Fields {
+		CCMenuItemToggler* m_bhToggler;
+	};
 
     bool init(LevelEditorLayer* p0) {
 		if (!EditorPauseLayer::init(p0)) return false;
@@ -83,10 +95,10 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 				autoBuildHelperSprOn->setContentSize({40, 40});
 				autoBuildHelperSprOff->setContentSize({40, 40});
 
-				CCMenuItemToggler* toggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, EditorUI::get(), menu_selector(MyEditorUI::onToggleAutoBuildHelper));
-				toggler->setID("build-helper-button"_spr);
-				toggler->toggle(true);
-				menu->addChild(toggler);
+				m_fields->m_bhToggler = CCMenuItemToggler::create(autoBuildHelperSprOn, autoBuildHelperSprOff, EditorUI::get(), menu_selector(MyEditorUI::onToggleAutoBuildHelper));
+				m_fields->m_bhToggler->setID("build-helper-button"_spr);
+				m_fields->m_bhToggler->toggle(true);
+				menu->addChild(m_fields->m_bhToggler);
 				menu->updateLayout();
 			}
 		}

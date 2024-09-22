@@ -1,3 +1,6 @@
+# 1.0.2
+- Fix visibility during playtest
+
 # 1.0.1
 - Option to show in pause menu.
 
