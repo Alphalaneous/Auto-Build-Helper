@@ -74,16 +74,15 @@ class $modify(MyEditorUI, EditorUI) {
 		}
 	}
 
-	#ifdef GEODE_IS_ANDROID
-    void pasteObjects(gd::string p0, bool p1) {
-		EditorUI::pasteObjects(p0, p1);
-		if (!p1 && m_fields->m_autoBuildHelperEnabled) {
+    CCArray* pasteObjects(gd::string p0, bool p1, bool p2) {
+		auto ret = EditorUI::pasteObjects(p0, p1, p2);
+		if (!p1 && !p2 && m_fields->m_autoBuildHelperEnabled) {
 			queueInMainThread([this] {
 				m_fields->m_pauseLayer->onBuildHelper(m_fields->m_pauseLayer);
 			});
 		}
+		return ret;
 	}
-	#endif
 
 };
 
@@ -118,25 +117,3 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 		return true;
 	}
 };
-
-
-#ifndef GEODE_IS_ANDROID
-
-class $modify(MyLevelEditorLayer, LevelEditorLayer) {
-
-    cocos2d::CCArray* createObjectsFromString(gd::string const& p0, bool p1, bool p2){
-		auto ret = LevelEditorLayer::createObjectsFromString(p0, p1, p2);
-		
-		if (m_editorUI) {
-			MyEditorUI* mui = static_cast<MyEditorUI*>(m_editorUI);
-			if (!p1 && !p2 && mui->m_fields->m_autoBuildHelperEnabled) {
-				queueInMainThread([mui] {
-					mui->m_fields->m_pauseLayer->onBuildHelper(mui->m_fields->m_pauseLayer);
-				});
-			}
-		}
-
-		return ret;
-	}
-};
-#endif
