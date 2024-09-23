@@ -117,7 +117,14 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 			if (!p1 && !p2 && mui->m_fields->m_autoBuildHelperEnabled) {
 				queueInMainThread([mui] {
 					#ifdef GEODE_IS_ANDROID
-					mui->dynamicGroupUpdate(false);
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+						mui->dynamicGroupUpdate(false);
+					});
+					});
+					});
+
 					#else
 					mui->m_fields->m_pauseLayer->onBuildHelper(mui->m_fields->m_pauseLayer);
 					#endif
