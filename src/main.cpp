@@ -73,6 +73,18 @@ class $modify(MyEditorUI, EditorUI) {
 			m_fields->m_bhToggler->setVisible(show);
 		}
 	}
+
+	#ifdef GEODE_IS_ANDROID
+    void pasteObjects(gd::string p0, bool p1) {
+		EditorUI::pasteObjects(p0, p1);
+		if (!p1 && m_fields->m_autoBuildHelperEnabled) {
+			queueInMainThread([this] {
+				m_fields->m_pauseLayer->onBuildHelper(m_fields->m_pauseLayer);
+			});
+		}
+	}
+	#endif
+
 };
 
 class $modify(MyEditorPauseLayer, EditorPauseLayer) {
@@ -107,6 +119,9 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 	}
 };
 
+
+#ifndef GEODE_IS_ANDROID
+
 class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 
     cocos2d::CCArray* createObjectsFromString(gd::string const& p0, bool p1, bool p2){
@@ -116,31 +131,7 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 			MyEditorUI* mui = static_cast<MyEditorUI*>(m_editorUI);
 			if (!p1 && !p2 && mui->m_fields->m_autoBuildHelperEnabled) {
 				queueInMainThread([mui] {
-					#ifdef GEODE_IS_ANDROID
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-					queueInMainThread([mui] {
-
-						mui->dynamicGroupUpdate(false);
-					});
-					});
-					});
-					});
-					});
-					});
-					});
-					});
-					});
-
-					#else
 					mui->m_fields->m_pauseLayer->onBuildHelper(mui->m_fields->m_pauseLayer);
-					#endif
 				});
 			}
 		}
@@ -148,3 +139,4 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 		return ret;
 	}
 };
+#endif
