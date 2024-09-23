@@ -1,5 +1,8 @@
+# 1.0.4
+- Remove unnecessary code
+
 # 1.0.3
-- Attempt to fix ghost build helper issue
+- Attempt to fix auto build helper on android
 
 # 1.0.2
 - Fix visibility during playtest

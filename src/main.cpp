@@ -8,7 +8,6 @@ using namespace geode::prelude;
 class $modify(MyEditorUI, EditorUI) {
 
 	struct Fields {
-		Ref<EditorPauseLayer> m_pauseLayer;
 		bool m_autoBuildHelperEnabled = false;
 		CCMenuItemToggler* m_bhToggler;
 	};
@@ -16,22 +15,6 @@ class $modify(MyEditorUI, EditorUI) {
 	bool init(LevelEditorLayer* editorLayer) {
 
 		if (!EditorUI::init(editorLayer)) return false;
-
-		m_fields->m_pauseLayer = EditorPauseLayer::create(editorLayer);
-		m_fields->m_pauseLayer->setTouchEnabled(false);
-		m_fields->m_pauseLayer->setKeyboardEnabled(false);
-		m_fields->m_pauseLayer->setKeypadEnabled(false);
-
-		CCTouchDispatcher::get()->unregisterForcePrio(m_fields->m_pauseLayer);
-		CCTouchDispatcher::get()->removeDelegate(m_fields->m_pauseLayer);
-
-		queueInMainThread([this] {
-			if (auto delegate = typeinfo_cast<CCTouchDelegate*>(m_fields->m_pauseLayer.data())) {
-				if (auto handler = CCTouchDispatcher::get()->findHandler(delegate)) {
-					CCTouchDispatcher::get()->setPriority(100000, handler->getDelegate());
-				}
-			}
-		});
 
 		if (!Mod::get()->getSettingValue<bool>("show-on-pause")) {
 			if (CCMenu* menu = typeinfo_cast<CCMenu*>(getChildByID("toolbar-toggles-menu"))) {
@@ -69,7 +52,7 @@ class $modify(MyEditorUI, EditorUI) {
 
 	void showUI(bool show) {
 		EditorUI::showUI(show);
-		if(m_fields->m_bhToggler) {
+		if (m_fields->m_bhToggler) {
 			m_fields->m_bhToggler->setVisible(show);
 		}
 	}
@@ -77,13 +60,10 @@ class $modify(MyEditorUI, EditorUI) {
     CCArray* pasteObjects(gd::string p0, bool p1, bool p2) {
 		auto ret = EditorUI::pasteObjects(p0, p1, p2);
 		if (!p1 && !p2 && m_fields->m_autoBuildHelperEnabled) {
-			queueInMainThread([this] {
-				m_fields->m_pauseLayer->onBuildHelper(m_fields->m_pauseLayer);
-			});
+			dynamicGroupUpdate(false);
 		}
 		return ret;
 	}
-
 };
 
 class $modify(MyEditorPauseLayer, EditorPauseLayer) {
@@ -113,7 +93,6 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 				menu->updateLayout();
 			}
 		}
-
 		return true;
 	}
 };
