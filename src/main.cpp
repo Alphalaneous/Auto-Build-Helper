@@ -120,7 +120,20 @@ class $modify(MyLevelEditorLayer, LevelEditorLayer) {
 					queueInMainThread([mui] {
 					queueInMainThread([mui] {
 					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+					queueInMainThread([mui] {
+
 						mui->dynamicGroupUpdate(false);
+					});
+					});
+					});
+					});
+					});
+					});
 					});
 					});
 					});
