@@ -1,12 +1,12 @@
 {
-	"geode": "3.4.0",
+	"geode": "4.0.0-alpha.1",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206"
+		"win": "2.2074",
+		"android": "2.2074"
 	},
 	"id": "alphalaneous.auto_build_helper",
 	"name": "Auto Build Helper",
-	"version": "v1.0.4",
+	"version": "v1.0.5-alpha.1",
 	"developer": "Alphalaneous",
 	"description": "Automatically run build helper on paste",
 	"links": {
