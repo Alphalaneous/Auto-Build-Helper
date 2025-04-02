@@ -1,13 +1,14 @@
 {
-	"geode": "4.2.0",
+	"geode": "4.3.1",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
-		"android": "2.2074"
+		"android": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "alphalaneous.auto_build_helper",
 	"name": "Auto Build Helper",
-	"version": "v1.0.6",
+	"version": "v1.0.7",
 	"developer": "Alphalaneous",
 	"description": "Automatically run build helper on paste",
 	"links": {
